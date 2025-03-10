@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:food_delivery1/pages/account_page.dart';
 import 'package:food_delivery1/pages/favorites_page.dart';
 import 'package:food_delivery1/pages/home_page.dart';
@@ -18,25 +21,34 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
       selectedIndex = newIndex;
     });
   }
-List<Widget> bodyOptions = const [
-  HomePage(),
-   FavoritesPage(),
-   AccountPage(),
-   
-];
+
+  List<Widget> bodyOptions = const [
+    HomePage(),
+    FavoritesPage(),
+    AccountPage(),
+  ];
   @override
   Widget build(BuildContext context) {
+    final PreferredSizeWidget? appBar;
+    final Widget? bottomNavBar;
+
+    if (Platform.isAndroid) {
+      appBar = AppBar(
+        title: Center(child: const Text('JOMFood')),
+      );
+      
+    } else if (Platform.isIOS) {
+      appBar = CupertinoNavigationBar(
+        middle: const Text('JOMFood'),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      );
+    } else {
+      appBar = null;
+    }
+
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: const Center(
-          child: Text('JomFood'),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        foregroundColor: Colors.black,
-      ),
-      body: bodyOptions[selectedIndex],
+      appBar: appBar,
+      body: SafeArea(child: bodyOptions[selectedIndex]),
       drawer: const Drawer(
         child: Center(
           child: Text('Im in the drawer!'),
@@ -50,7 +62,6 @@ List<Widget> bodyOptions = const [
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
         ],
         currentIndex: selectedIndex,
-        selectedItemColor: Colors.deepOrange,
         onTap: onItemTapped,
       ),
     );

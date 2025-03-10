@@ -1,92 +1,121 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
 
-  Widget orderVoucherItem({required String name, required int number}) {
+  Widget orderVoucherItem(BuildContext context,
+      {required String name, required int number}) {
     return Column(
       children: [
         Text(
           number.toString(),
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w600,
-            color: Colors.deepOrange,
-          ),
+          style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                color: Theme.of(context).primaryColor,
+              ),
         ),
         Text(
-          'Vouchers',
-          style: const TextStyle(
-            fontSize: 18,
-          ),
+          name,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ],
     );
   }
 
-  Widget itemTappedTile(
-      {required String title,
-       String? subtitle,
-        required IconData icon
-        }) {
+  Widget itemTappedTile(BuildContext context,
+      {required String title, String? subtitle, required IconData icon}) {
+    final size = MediaQuery.of(context).size;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     return ListTile(
       title: Text(title),
       leading: Icon(
         icon,
-        size: 35,
-        color: Colors.deepOrange,
+        size:isLandscape ? size.height * 0.09 : size.height * 0.03,
       ),
       onTap: () => debugPrint('$title clicked!'),
       subtitle: subtitle != null ? Text(subtitle) : null,
-      trailing: const Icon(Icons.chevron_right,
-       color: Colors.deepOrange, 
-       size: 25,),
+      trailing: Icon(
+        Icons.chevron_right,
+        size: isLandscape ? size.height * 0.09 : size.height * 0.03,
+      ),
+    );
+  }
+
+  Widget personPhoto(double width, double height) {
+    return Container(
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        image: DecorationImage(
+            image: AssetImage(
+              'assets/images/khaled_q.png',
+            ),
+            fit: BoxFit.cover),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    final size = MediaQuery.of(context).size;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
+    final nameText = Text(
+      'Khaled Alqedra',
+      style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+    );
+
+    return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
-            height: 250,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                  image: AssetImage(
-                    'assets/images/khaled_q.png',
-                  ),
-                  fit: BoxFit.cover),
+          if (!isLandscape) ...[
+            personPhoto(size.width * 0.5, size.height * 0.25),
+            nameText,
+            const SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                orderVoucherItem(context, name: 'Orders', number: 50),
+                orderVoucherItem(context, name: 'Vouchers', number: 10),
+              ],
             ),
-          ),
-          const SizedBox(
-            height: 16.0,
-          ),
-          const Text(
-            'Khaled Alqedra',
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.w600,
+            const SizedBox(height: 24.0),
+          ],
+          if (isLandscape) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    personPhoto(size.width * 0.25, size.height * 0.5),
+                    const SizedBox(height: 8.0),
+                    nameText,
+                  ],
+                ),
+                Column(
+                  children: [
+                    orderVoucherItem(context, name: 'Orders', number: 50),
+                    const SizedBox(height: 16),
+                    orderVoucherItem(context, name: 'Vouchers', number: 10),
+                  ],
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              orderVoucherItem(name: 'Orders', number: 50),
-              orderVoucherItem(name: 'Vouchers', number: 10),
-            ],
-          ),
-          const SizedBox(height: 24.0),
-          const Divider(thickness: 2, indent: 20, endIndent: 20,
-          ),
-          itemTappedTile(title: 'Past Orders', icon: Icons.shopping_cart),
-          const Divider(thickness: 2, indent: 20, endIndent: 20,
-          ),
-          itemTappedTile(title: 'Available Vouchers', icon: Icons.card_giftcard),
-          const Divider(thickness: 2, indent: 20, endIndent: 20,
-          ),
+          ],
+          const Divider(),
+          itemTappedTile(context,
+              title: 'Past Orders', icon: Icons.shopping_cart),
+          const Divider(),
+          itemTappedTile(context,
+              title: 'Available Vouchers', icon: Icons.card_giftcard),
+          const Divider(),
         ],
       ),
     );

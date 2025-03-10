@@ -1,4 +1,10 @@
+// Dart
+import 'dart:io';
+
+// Flutter
 import 'package:flutter/material.dart';
+// Other Packages
+// Internal (Files)
 import 'package:food_delivery1/models/food_item.dart';
 import 'package:food_delivery1/widgets/food_grid_item.dart';
 
@@ -8,6 +14,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
@@ -17,7 +25,7 @@ class HomePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(24.0),
               child: Image.asset(
                 'assets/images/classic_burger.jpg',
-                height: size.height * 0.23,
+                height: isLandscape ? size.height * 0.8 : size.height * 0.23,
                 fit: BoxFit.cover,
               ),
             ),
@@ -26,14 +34,12 @@ class HomePage extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: food.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 20,
-                crossAxisSpacing: 20,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: isLandscape ? 4 : 2,
+                mainAxisSpacing: size.height * 0.02,
+                crossAxisSpacing: size.height * 0.01,
               ),
-              itemBuilder: (context, index) =>
-                  FoodGridItem(foodIndex: index
-                  ),
+              itemBuilder: (context, index) => FoodGridItem(foodIndex: index),
             ),
           ],
         ),

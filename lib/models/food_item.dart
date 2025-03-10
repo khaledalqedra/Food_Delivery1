@@ -30,24 +30,39 @@ List<FoodItem> food = [
   FoodItem(
     name: 'Beef Burger',
     imgUrl: 'https://www.pngmart.com/files/23/Big-Mac-PNG-Image.png',
-    price: 8.5,
+    price: 7.0,
   ),
   FoodItem(
       name: 'Chicken Burger',
       imgUrl:
           'https://www.pngmart.com/files/15/Non-Veg-Burger-King-PNG-Clipart.png',
-      price: 8.5),
+      price: 5.5),
   FoodItem(
-      name: 'Pizza',
+      name: 'Peooeroni Pizza',
       imgUrl: 'https://www.pngmart.com/files/1/Pepperoni-Pizza.png',
-      price: 8.5),
+      price: 9.0),
   FoodItem(
       name: 'Pasta',
       imgUrl: 'https://www.pngmart.com/files/5/Spaghetti-PNG-Clipart.png',
-      price: 8.5),
+      price: 5.0),
   FoodItem(
       name: 'Chicken Wings',
       imgUrl:
           'https://www.pngmart.com/files/12/Chicken-Wings-PNG-Transparent.png',
       price: 8.5),
+  FoodItem(
+      name: 'Sushi',
+      imgUrl:
+          'https://www.pngmart.com/files/5/Avocado-Roll-PNG-Image.png',
+      price: 10.0),
+  FoodItem(
+      name: 'Ramen Soup',
+      imgUrl:
+          'https://www.pngmart.com/files/23/Ramen-PNG-Isolated-Photo.png',
+      price: 6.0),
+  FoodItem(
+      name: 'Cheese Pizza',
+      imgUrl:
+          'https://www.pngmart.com/files/1/Cheese-Pizza.png',
+      price: 8.0),
 ];
