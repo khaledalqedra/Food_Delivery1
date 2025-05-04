@@ -9,23 +9,26 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
+  
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
     final favoriteFood =
         food.where((FoodItem) => FoodItem.isFavorite == true).toList();
 
     if (favoriteFood.isEmpty) {
       return Center(
         child: Column(
-          
           children: [
-            Image.asset('assets/images/empty_state.png',
-             fit: BoxFit.cover,
-             height: 350,),
-            const Text('No Favorite Items Found!',
-            style: TextStyle(
-              fontSize: 22,
+            Image.asset(
+              'assets/images/empty_state.png',
+              fit: BoxFit.cover,
+              height: size.height * 0.3,
             ),
+            Text(
+              'No Favorite Items Found!',
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
           ],
         ),
@@ -44,8 +47,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
               children: [
                 Image.network(
                   favoriteFood[index].imgUrl,
-                  height: 70,
-                  width: 100,
+                  height: isLandscape ? size.height * 0.2 : size.height * 0.09,
+                  width: size.width * 0.2,
                   fit: BoxFit.contain,
                 ),
                 const SizedBox(width: 8.0),
@@ -54,24 +57,21 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        food[index].name,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        favoriteFood[index].name,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      const SizedBox(height: 8.0),
+                      const SizedBox(height: 4.0),
                       Text(
                         '\$ ${favoriteFood[index].price}',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.deepOrange,
-                        ),
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
+                            ),
                       ),
                     ],
                   ),
                 ),
+                if (!isLandscape)
                 IconButton(
                   onPressed: () {
                     final targetedItem = favoriteFood[index];
@@ -82,12 +82,33 @@ class _FavoritesPageState extends State<FavoritesPage> {
                       favoriteFood.remove(targetedItem);
                     });
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.favorite,
-                    color: Colors.deepOrange,
-                    size: 30,
+                    color: Theme.of(context).primaryColor,
+                    size:isLandscape ? size.height * 0.1 : size.height * 0.035,
                   ),
                 ),
+
+                if (isLandscape)
+                TextButton.icon( 
+                    icon: Icon(Icons.favorite, color: Theme.of(context).primaryColor,
+                    size:isLandscape 
+                    ? size.height * 0.08 
+                    : size.height * 0.035,
+                    ),
+                    onPressed: () {
+                    final targetedItem = favoriteFood[index];
+                    int targetedIndex = food.indexOf(targetedItem);
+                    setState(() {
+                      food[targetedIndex] =
+                          food[targetedIndex].copyWith(isFavorite: false);
+                      favoriteFood.remove(targetedItem);
+                    });
+                  }, label: Text('Favorite',
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  ),),
               ],
             ),
           ),
