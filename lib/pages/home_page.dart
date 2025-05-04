@@ -6,10 +6,28 @@ import 'package:flutter/material.dart';
 // Other Packages
 // Internal (Files)
 import 'package:food_delivery1/models/food_item.dart';
+import 'package:food_delivery1/pages/food_details_page.dart';
+import 'package:food_delivery1/ui_models/food_details_args.dart';
 import 'package:food_delivery1/widgets/food_grid_item.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+
+class _HomePageState extends State<HomePage> {
+  String? categoryChosenId;
+  bool enableCategoryFilter = false;
+  late List<FoodItem> filteredFood;
+
+  @override
+  void initState() {
+    super.initState();
+    filteredFood = food;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +57,28 @@ class HomePage extends StatelessWidget {
                 mainAxisSpacing: size.height * 0.02,
                 crossAxisSpacing: size.height * 0.01,
               ),
-              itemBuilder: (context, index) => FoodGridItem(foodIndex: index),
+              itemBuilder: (context, index) => InkWell(
+                onTap: () {
+                  final targetedFoodItem = food
+                      .firstWhere((item) => item.id == filteredFood[index].id);
+                  final targetedIndex = food.indexOf(targetedFoodItem);
+                  Navigator.of(context)
+                      .pushNamed(
+                    FoodDetailsPage.routeName,
+                    arguments: FoodDetailsArgs(foodIndex: targetedIndex),
+                  )
+                      .then((value) {
+                    setState(() {});
+                    filteredFood = food;
+                    categoryChosenId = null;
+                    debugPrint("The value returned in home: $value");
+                  });
+                },
+                child: FoodGridItem(
+                  foodIndex: index,
+                  filteredFood: filteredFood,
+                ),
+              ),
             ),
           ],
         ),

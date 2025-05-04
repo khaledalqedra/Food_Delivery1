@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:food_delivery1/pages/bottom_navbar.dart';
+import 'package:food_delivery1/pages/food_details_page.dart';
 
 void main() {
   
@@ -37,7 +38,10 @@ class MyApp extends StatelessWidget {
         ),
         fontFamily: 'OpenSans',
       ),
-      home: const BottomNavBarPage(),
+      routes: {
+        '/': (context) => const BottomNavBarPage(),
+        FoodDetailsPage.routeName: (context) => const FoodDetailsPage(),
+      },
     );
   }
 }

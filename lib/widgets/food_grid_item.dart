@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
 import 'package:food_delivery1/models/food_item.dart';
+import 'package:food_delivery1/widgets/favorite_button.dart';
 
-class FoodGridItem extends StatefulWidget {
+class FoodGridItem extends StatelessWidget {
   final int foodIndex;
-  const FoodGridItem({super.key, required this.foodIndex});
+  final List<FoodItem> filteredFood;
 
-  @override
-  State<FoodGridItem> createState() => _FoodGridItemState();
-}
+  const FoodGridItem({
+    super.key,
+    required this.foodIndex,
+    required this.filteredFood,
+  });
 
-class _FoodGridItemState extends State<FoodGridItem> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final targetedIndex = food.indexOf(filteredFood[foodIndex]);
 
     return Container(
       decoration: BoxDecoration(
@@ -29,55 +32,36 @@ class _FoodGridItemState extends State<FoodGridItem> {
                 alignment: Alignment.topCenter,
                 children: [
                   Image.network(
-                    food[widget.foodIndex].imgUrl,
+                    filteredFood[foodIndex].imgUrl,
                     height: constraints.maxHeight * 0.55,
                   ),
                   Align(
                     alignment: Alignment.topRight,
-                    child: Container(
+                    child: FavoriteButton(
+                      foodIndex: targetedIndex,
                       height: constraints.maxHeight * 0.2,
-                      width: constraints.maxWidth * 0.2,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: InkWell(
-                        onTap: () => setState(() {
-                          food[widget.foodIndex] = food[widget.foodIndex]
-                              .copyWith(
-                                  isFavorite:
-                                      !food[widget.foodIndex].isFavorite);
-                        }),
-                        child: Icon(
-                          food[widget.foodIndex].isFavorite
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
+                      width: constraints.maxWidth * 0.2, constraints: null,
                     ),
                   ),
                 ],
               ),
               SizedBox(height: constraints.maxHeight * 0.05),
               SizedBox(
-                height: constraints.maxHeight * 0.197,
+                height: constraints.maxHeight * 0.2,
                 child: FittedBox(
                   child: Text(
-                    food[widget.foodIndex].name,
+                    filteredFood[foodIndex].name,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
               ),
-              SizedBox(
-                height: constraints.maxHeight * 0.01,
-              ),
+              SizedBox(height: constraints.maxHeight * 0.01),
               SizedBox(
                 height: constraints.maxHeight * 0.17,
                 child: FittedBox(
                   child: Text(
-                    '\$ ${food[widget.foodIndex].price}',
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    '\$ ${filteredFood[foodIndex].price}',
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: Theme.of(context).primaryColor,
                         ),
                   ),

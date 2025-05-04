@@ -63,6 +63,9 @@ flutter:
       - assets/images/classic_burger.jpg
       - assets/images/khaled_q.png
       - assets/images/empty_state.png
+      - assets/images/categories/burger.png
+      - assets/images/categories/pasta.png
+      - assets/images/categories/pizza.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -13,8 +13,27 @@ class BottomNavBarPage extends StatefulWidget {
   State<BottomNavBarPage> createState() => _BottomNavBarPageState();
 }
 
-class _BottomNavBarPageState extends State<BottomNavBarPage> {
+class _BottomNavBarPageState extends State<BottomNavBarPage>
+    with WidgetsBindingObserver {
   int selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    debugPrint(state.toString());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   void onItemTapped(int newIndex) {
     setState(() {
@@ -30,17 +49,54 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
   @override
   Widget build(BuildContext context) {
     final PreferredSizeWidget? appBar;
-    final Widget? bottomNavBar;
+    Widget? bottomNavBar;
 
     if (Platform.isAndroid) {
       appBar = AppBar(
-        title: Center(child: const Text('JOMFood')),
+        title: const Center(child: Text('JOMFood')),
       );
-      
+      bottomNavBar =
+      BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem
+          (icon: Icon(Icons.home),
+           label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+               label: 'Favorite'
+               ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+             label: 'Account'
+             ),
+        ],
+        currentIndex: selectedIndex,
+        onTap: onItemTapped,
+      );
+
     } else if (Platform.isIOS) {
       appBar = CupertinoNavigationBar(
         middle: const Text('JOMFood'),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      );
+
+       bottomNavBar = CupertinoTabBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorite',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Account',
+          ),
+        ],
+        currentIndex: selectedIndex,
+        onTap: onItemTapped,
       );
     } else {
       appBar = null;
@@ -54,16 +110,7 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
           child: Text('Im in the drawer!'),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), label: 'Favorite'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Account'),
-        ],
-        currentIndex: selectedIndex,
-        onTap: onItemTapped,
-      ),
+      bottomNavigationBar: bottomNavBar,
     );
   }
 }
